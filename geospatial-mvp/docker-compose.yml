@@ -1,0 +1,29 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      GEO_ENVIRONMENT: docker
+      GEO_LOG_LEVEL: INFO
+      GEO_DATA_DIR: /app/data
+      GEO_UPLOADS_DIR: /app/data/uploads
+      GEO_OUTPUTS_DIR: /app/data/outputs
+    volumes:
+      - geodata:/app/data
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    depends_on:
+      - api
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+
+volumes:
+  geodata:
